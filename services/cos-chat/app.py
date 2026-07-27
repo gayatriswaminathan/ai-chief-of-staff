@@ -448,9 +448,11 @@ def narrative(brief_text: str) -> str | None:
                        headers={"x-api-key": ANTHROPIC_API_KEY,
                                 "anthropic-version": "2023-06-01"},
                        json={"model": "claude-haiku-4-5-20251001", "max_tokens": 250,
-                             "system": ("You are a chief of staff. Given today's brief, write 2-3 "
-                                        "sentences naming the top priorities and biggest risk. "
-                                        "Plain text, no preamble, refer only to items in the brief."),
+                             "system": ("You are a chief of staff. Given today's brief, respond in "
+                                        "exactly this two-line plain-text format, no markdown, no preamble:\n"
+                                        "Priorities: <2-3 short priorities, separated by semicolons>\n"
+                                        "Biggest risk: <one sentence>\n"
+                                        "Refer only to items in the brief. Keep each priority under 20 words."),
                              "messages": [{"role": "user", "content": brief_text}]},
                        timeout=20)
         r.raise_for_status()

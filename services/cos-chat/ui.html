@@ -4,93 +4,216 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI Chief of Staff — Governed Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
   :root {
-    --bg: #0f1419; --panel: #1a2129; --panel2: #232b35; --line: #2e3947;
-    --text: #e6edf3; --dim: #8b98a5; --accent: #4da3ff; --ok: #3fb950;
-    --warn: #d29922; --bad: #f85149; --chip: #253041;
+    --cream: #F7F5E9; --cream-2: #EFEBD6; --white: #FFFFFF;
+    --ink: #15150F; --ink-soft: #6B6B58; --ink-faint: #9B9B86;
+    --line: #E4DFC6; --line-strong: #D8D2B4;
+    --yellow: #F5E642; --yellow-dark: #E7D61C;
+    --blue: #3E6FF0; --pink: #F5559B; --orange: #FF8A3D; --red: #FF4D4D; --green: #2FAE60; --purple: #9B59F5;
+    --persona: var(--pink);
+    --shadow: 0 1px 2px rgba(20,20,15,.05), 0 8px 20px rgba(20,20,15,.06);
+    --shadow-lift: 0 6px 16px rgba(20,20,15,.09), 0 18px 40px rgba(20,20,15,.10);
   }
   * { box-sizing: border-box; margin: 0; }
-  body { background: var(--bg); color: var(--text);
-         font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-         height: 100vh; display: flex; flex-direction: column; }
-  header { display: flex; align-items: center; gap: 14px; padding: 14px 22px;
-           background: var(--panel); border-bottom: 1px solid var(--line); }
-  header h1 { font-size: 17px; font-weight: 650; }
-  header .sub { color: var(--dim); font-size: 12.5px; }
-  header .spacer { flex: 1; }
-  select { background: var(--panel2); color: var(--text); border: 1px solid var(--line);
-           border-radius: 8px; padding: 7px 10px; font-size: 13.5px; }
-  .tier-note { font-size: 11.5px; color: var(--dim); max-width: 300px; text-align: right; }
+  body { background: var(--cream); color: var(--ink);
+         font: 400 15px/1.55 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+         height: 100vh; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; }
+
+  header { display: flex; align-items: center; gap: 18px; padding: 14px 24px;
+           background: var(--white); border-bottom: 1px solid var(--line); box-shadow: var(--shadow); z-index: 2; }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .logo { width: 36px; height: 36px; border-radius: 10px; background: var(--ink);
+          display: grid; grid-template-columns: repeat(2, 1fr); gap: 3px; padding: 7px; flex-shrink: 0; }
+  .logo span { border-radius: 2px; background: var(--yellow); }
+  .logo span:nth-child(3) { background: var(--pink); }
+  h1 { font-size: 17px; font-weight: 800; letter-spacing: -.01em; }
+  .sub-pill { font-size: 11px; color: var(--ink-soft); margin-top: 2px; font-weight: 500; }
+  .spacer { flex: 1; }
+  .persona-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+  .persona-switch { display: flex; background: var(--cream); border: 1px solid var(--line);
+                     border-radius: 999px; padding: 3px; gap: 2px; }
+  .persona-btn { border: 0; background: transparent; padding: 7px 14px; border-radius: 999px;
+                 font: 700 12.5px 'Inter', sans-serif; color: var(--ink-soft); cursor: pointer;
+                 display: flex; align-items: center; gap: 7px; transition: all .15s ease; white-space: nowrap; }
+  .persona-btn .pdot { width: 6px; height: 6px; border-radius: 50%; }
+  .persona-btn.active { background: var(--ink); color: #fff; box-shadow: var(--shadow); }
+  .persona-btn:not(.active):hover { color: var(--ink); background: var(--white); }
+  .tier-note { font-size: 11px; color: var(--ink-faint); max-width: 340px; text-align: right; }
+
+  .gov-strip { display: flex; gap: 22px; padding: 10px 24px; background: var(--cream-2);
+               border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+  .gov-item { display: flex; align-items: center; gap: 7px; font-size: 11.5px; color: var(--ink-soft); font-weight: 500; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; display: inline-block; }
+  .dot.blue { background: var(--blue); } .dot.pink { background: var(--pink); }
+  .dot.orange { background: var(--orange); } .dot.red { background: var(--red); }
+  .dot.green { background: var(--green); } .dot.purple { background: var(--purple); }
+
   main { flex: 1; display: flex; min-height: 0; }
-  #log { flex: 1; overflow-y: auto; padding: 22px; display: flex;
-         flex-direction: column; gap: 14px; }
-  .msg { max-width: 78%; border-radius: 12px; padding: 12px 15px; }
-  .user { align-self: flex-end; background: #1f4068; }
-  .bot  { align-self: flex-start; background: var(--panel); border: 1px solid var(--line); }
-  .bot pre { white-space: pre-wrap; font: 13px/1.55 ui-monospace, "SF Mono", Menlo, monospace; }
-  .meta { margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--line);
-          font-size: 12px; color: var(--dim); }
-  .chip { display: inline-block; background: var(--chip); color: var(--accent);
-          border-radius: 20px; padding: 1px 10px; font-size: 11.5px; margin-right: 6px; }
-  .gonogo { margin-top: 10px; display: flex; gap: 8px; }
-  .gonogo button { border: 0; border-radius: 8px; padding: 7px 16px; font-size: 13px;
-                   cursor: pointer; font-weight: 600; }
-  .go   { background: var(--ok); color: #04260d; }
-  .nogo { background: var(--bad); color: #2d0400; }
-  aside { width: 290px; border-left: 1px solid var(--line); background: var(--panel);
-          padding: 16px; overflow-y: auto; }
-  aside h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em;
-             color: var(--dim); margin: 14px 0 8px; }
+  #log { flex: 1; overflow-y: auto; padding: 26px 26px 10px; display: flex; flex-direction: column; gap: 16px;
+         background-image: radial-gradient(circle, rgba(20,20,15,.07) 1px, transparent 1px);
+         background-size: 22px 22px; }
+  #log::-webkit-scrollbar { width: 8px; }
+  #log::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 8px; }
+
+  @keyframes msgIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .msg { max-width: 74%; border-radius: 18px; padding: 13px 17px; animation: msgIn .3s cubic-bezier(.2,.7,.3,1) both; }
+  .msg-label { display: flex; align-items: center; justify-content: space-between; gap: 10px;
+               font-size: 10.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+               opacity: .6; margin-bottom: 7px; }
+  .msg-label .time { text-transform: none; letter-spacing: normal; font-weight: 500; opacity: .8; }
+  .pdot-inline { width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+
+  .user { align-self: flex-end; background: var(--ink); color: #fff; box-shadow: var(--shadow);
+          border-bottom-right-radius: 6px; border-left: 3px solid var(--persona); }
+  .user .msg-label { color: rgba(255,255,255,.65); }
+
+  .bot { align-self: flex-start; background: var(--white); border: 1px solid var(--line);
+         box-shadow: var(--shadow); border-bottom-left-radius: 6px; }
+  .bot .msg-label { color: var(--ink-faint); }
+  .bot pre { white-space: pre-wrap; font: 400 13px/1.6 'JetBrains Mono', ui-monospace, "SF Mono", Menlo, monospace;
+             background: var(--cream-2); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+
+  /* structured answer rendering */
+  .answer-body { display: flex; flex-direction: column; gap: 16px; }
+  .a-block-denied { border-left: 3px solid var(--red); padding-left: 12px; }
+  .a-block-highlight { background: linear-gradient(135deg, rgba(245,230,66,.20), rgba(245,85,155,.10));
+                        border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+  .a-header { font-size: 13px; font-weight: 800; color: var(--ink); display: flex; align-items: center;
+              flex-wrap: wrap; gap: 8px; margin-bottom: 9px; }
+  .a-header-lg { font-size: 14px; }
+  .a-badge { background: var(--cream-2); color: var(--ink-soft); border-radius: 999px; padding: 2px 9px;
+             font-size: 11px; font-weight: 700; }
+  .a-id { font: 600 10.5px 'JetBrains Mono', ui-monospace, monospace; color: #fff; background: var(--ink-faint);
+          padding: 3px 8px; border-radius: 6px; flex-shrink: 0; letter-spacing: .01em; }
+  .a-id-blue { background: var(--blue); } .a-id-pink { background: var(--pink); } .a-id-purple { background: var(--purple); }
+  .a-status { font-size: 10px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase;
+              padding: 2px 8px; border-radius: 999px; background: var(--cream-2); color: var(--ink-soft); }
+  .a-status-proposed { background: rgba(255,138,61,.18); color: #a2560f; }
+  .a-status-executed, .a-status-decided { background: rgba(47,174,96,.18); color: #1c7a41; }
+  .a-status-draft { background: rgba(155,155,134,.2); color: var(--ink-soft); }
+  .a-status-open { background: rgba(62,111,240,.14); color: #2451c4; }
+  .a-status-reversed { background: rgba(255,77,77,.15); color: #c22222; }
+  .a-rows { display: flex; flex-direction: column; gap: 6px; }
+  .a-row { display: flex; align-items: flex-start; gap: 11px; padding: 9px 11px; background: var(--cream);
+           border: 1px solid var(--line); border-radius: 10px; }
+  .a-row-overdue { border-color: rgba(255,77,77,.4); background: rgba(255,77,77,.05); }
+  .a-row-sub { padding: 0 0 0 26px; background: transparent; border: 0; }
+  .a-time { font: 600 11.5px 'JetBrains Mono', monospace; color: var(--ink-soft); background: var(--cream-2);
+            padding: 3px 7px; border-radius: 6px; flex-shrink: 0; white-space: nowrap; }
+  .a-main { flex: 1; font-size: 12.5px; color: var(--ink); line-height: 1.5; }
+  .a-sub { color: var(--ink-soft); font-size: 11.5px; margin-top: 3px; }
+  .a-loc { color: var(--ink-faint); font-weight: 500; }
+  .a-people { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+  .a-person { font-size: 10.5px; background: var(--cream-2); color: var(--ink-soft); padding: 2px 8px;
+              border-radius: 999px; font-weight: 500; }
+  .a-person-empty { font-style: italic; opacity: .7; }
+  .a-people-row { display: flex; gap: 8px; align-items: flex-start; font-size: 12px; }
+  .a-sub-label { font-size: 11px; font-weight: 700; color: var(--ink-faint); text-transform: uppercase;
+                 letter-spacing: .04em; min-width: 70px; padding-top: 1px; flex-shrink: 0; }
+  .a-field { display: flex; gap: 8px; font-size: 12.5px; padding: 2px 0; }
+  .a-field-label { color: var(--ink-faint); font-weight: 700; min-width: 90px; flex-shrink: 0; }
+  .a-field-value { color: var(--ink); word-break: break-word; }
+  .a-note { font-size: 12px; color: var(--ink-soft); font-style: italic; margin-top: 4px; }
+  .a-tip { font-size: 12px; color: var(--ink-soft); background: var(--cream-2); border-radius: 8px;
+           padding: 7px 10px; margin-top: 2px; }
+  .a-plain { font-size: 13.5px; line-height: 1.6; color: var(--ink); padding: 1px 0; }
+  .a-subheader { font-size: 12px; font-weight: 800; color: var(--ink); margin: 10px 0 6px;
+                 display: flex; align-items: center; gap: 8px; }
+  .a-rows > .a-subheader:first-child { margin-top: 0; }
+  .a-narrative-label { font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em;
+                        color: var(--ink-faint); margin-bottom: 5px; }
+  .a-priorities { list-style: none; padding: 0; margin: 0 0 12px; display: flex; flex-direction: column; gap: 6px; }
+  .a-priorities li { font-size: 13px; line-height: 1.5; color: var(--ink); padding-left: 18px; position: relative; }
+  .a-priorities li::before { content: ""; position: absolute; left: 2px; top: 7px; width: 6px; height: 6px;
+                              border-radius: 50%; background: var(--pink); }
+  .a-risk { display: flex; gap: 9px; align-items: flex-start; font-size: 13px; line-height: 1.5; color: var(--ink);
+            background: rgba(255,77,77,.08); border: 1px solid rgba(255,77,77,.25); border-radius: 10px; padding: 9px 11px; }
+  .a-flag-overdue { color: var(--red); font-weight: 700; }
+
+  .meta { margin-top: 11px; padding-top: 10px; border-top: 1px dashed var(--line); font-size: 12px; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; background: var(--cream-2); color: var(--ink);
+          border-radius: 20px; padding: 4px 11px 4px 9px; font-size: 11px; font-weight: 700; }
+  .reasoning { margin-top: 7px; font-size: 12px; color: var(--ink-soft); font-style: italic; line-height: 1.5; }
+
+  .thinking { color: var(--ink-faint); font-style: italic; font-size: 13px; }
+
+  .gonogo { margin-top: 12px; padding: 12px 13px; background: var(--cream-2); border: 1px dashed var(--line-strong);
+            border-radius: 12px; }
+  .gonogo-label { font-size: 11.5px; font-weight: 700; color: var(--ink-soft); margin-bottom: 9px;
+                  display: flex; align-items: center; gap: 7px; text-transform: uppercase; letter-spacing: .04em; }
+  .gonogo-label .pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--orange);
+                          animation: pulse 1.4s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .4; transform: scale(1.3); } }
+  .gonogo-actions { display: flex; gap: 8px; }
+  .gonogo button { border: 0; border-radius: 999px; padding: 8px 17px; font: 700 12.5px 'Inter', sans-serif;
+                    cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all .15s ease; }
+  .go   { background: var(--green); color: #fff; }
+  .go:hover { background: #279653; transform: translateY(-1px); box-shadow: var(--shadow-lift); }
+  .nogo { background: transparent; border: 1.5px solid var(--ink) !important; color: var(--ink); }
+  .nogo:hover { background: var(--ink); color: #fff; }
+
+  aside { width: 300px; border-left: 1px solid var(--line); background: var(--white); padding: 18px; overflow-y: auto; }
+  aside h3 { display: flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 800; text-transform: uppercase;
+             letter-spacing: .07em; color: var(--ink-faint); margin: 20px 0 9px; }
   aside h3:first-child { margin-top: 0; }
-  .sample { display: block; width: 100%; text-align: left; background: var(--panel2);
-            color: var(--text); border: 1px solid var(--line); border-radius: 8px;
-            padding: 8px 11px; margin-bottom: 6px; font-size: 13px; cursor: pointer; }
-  .sample:hover { border-color: var(--accent); }
-  footer { display: flex; gap: 10px; padding: 14px 22px; background: var(--panel);
-           border-top: 1px solid var(--line); }
-  #q { flex: 1; background: var(--panel2); border: 1px solid var(--line); color: var(--text);
-       border-radius: 10px; padding: 11px 14px; font-size: 15px; }
-  #q:focus { outline: none; border-color: var(--accent); }
-  #send { background: var(--accent); color: #04182e; border: 0; border-radius: 10px;
-          padding: 0 22px; font-size: 15px; font-weight: 650; cursor: pointer; }
-  .thinking { color: var(--dim); font-style: italic; }
-  .banner { font-size: 12.5px; color: var(--dim); padding: 10px 22px;
-            border-bottom: 1px solid var(--line); background: var(--bg); }
-  .banner b { color: var(--text); }
+  .sample { display: block; width: 100%; text-align: left; background: var(--cream); color: var(--ink);
+            border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px;
+            font-size: 12.5px; line-height: 1.4; cursor: pointer; transition: all .15s ease; font-family: inherit; }
+  .sample:hover { border-color: var(--ink); background: var(--white); box-shadow: var(--shadow-lift); transform: translateY(-1px); }
+
+  footer { display: flex; gap: 10px; padding: 16px 24px; background: var(--white); border-top: 1px solid var(--line); }
+  #q { flex: 1; background: var(--cream); border: 1.5px solid var(--line); color: var(--ink);
+       border-radius: 999px; padding: 12px 18px; font: 400 14.5px 'Inter', sans-serif; }
+  #q::placeholder { color: var(--ink-faint); }
+  #q:focus { outline: none; border-color: var(--ink); background: var(--white); }
+  #send { background: var(--yellow); color: var(--ink); border: 0; border-radius: 999px; padding: 0 24px;
+          font: 800 14px 'Inter', sans-serif; cursor: pointer; transition: all .15s ease; display: flex; align-items: center; gap: 7px; }
+  #send:hover { background: var(--yellow-dark); transform: translateY(-1px); box-shadow: var(--shadow-lift); }
+  #send:active { transform: translateY(0); }
 </style>
 </head>
 <body>
 <header>
-  <div>
-    <h1>AI Chief of Staff</h1>
-    <div class="sub">AI proposes &middot; policy decides &middot; everything audited</div>
+  <div class="brand">
+    <div class="logo"><span></span><span></span><span></span><span></span></div>
+    <div>
+      <h1>AI Chief of Staff</h1>
+      <div class="sub-pill">AI proposes &middot; policy decides &middot; everything audited</div>
+    </div>
   </div>
   <div class="spacer"></div>
-  <select id="actor" title="Acting as">
-    <option value="leader@example.com">Principal — leader@example.com</option>
-    <option value="cos@example.com" selected>Chief of Staff — cos@example.com</option>
-    <option value="delegate@example.com">Delegate — delegate@example.com</option>
-    <option value="stranger@example.com">Unauthorized — stranger@example.com</option>
-  </select>
-  <div class="tier-note" id="tiernote"></div>
+  <div class="persona-wrap">
+    <div class="persona-switch" id="personaSwitch">
+      <button class="persona-btn" data-value="leader@example.com"><span class="pdot" style="background:var(--blue)"></span>Principal</button>
+      <button class="persona-btn active" data-value="cos@example.com"><span class="pdot" style="background:var(--pink)"></span>Chief of Staff</button>
+      <button class="persona-btn" data-value="delegate@example.com"><span class="pdot" style="background:var(--orange)"></span>Delegate</button>
+      <button class="persona-btn" data-value="stranger@example.com"><span class="pdot" style="background:var(--red)"></span>Unauthorized</button>
+    </div>
+    <div class="tier-note" id="tiernote"></div>
+  </div>
 </header>
-<div class="banner">Every action below runs an <b>OPA policy preflight</b>; writes land as
-<b>record + security event in one transaction</b>; answers come from the
-<b>Neo4j graph built by CDC</b>. Switch personas to watch policy change the outcome.</div>
+<div class="gov-strip">
+  <div class="gov-item"><span class="dot blue"></span>OPA policy preflight on every action</div>
+  <div class="gov-item"><span class="dot pink"></span>Record + security event, one transaction</div>
+  <div class="gov-item"><span class="dot orange"></span>Answers from the Neo4j graph, built by CDC</div>
+</div>
 <main>
   <div id="log"></div>
   <aside>
-    <h3>Read — graph &amp; policy</h3>
+    <h3><span class="dot blue"></span>Read — graph &amp; policy</h3>
     <button class="sample">morning brief</button>
     <button class="sample">what is on my plate</button>
     <button class="sample">what does my week look like</button>
     <button class="sample">prep me for my next meeting</button>
     <button class="sample">what did we decide about the vendor?</button>
-    <h3>Eligibility vs audit</h3>
+    <h3><span class="dot orange"></span>Eligibility vs audit</h3>
     <button class="sample">who can send email</button>
     <button class="sample">who created C-E7A4D006</button>
-    <h3>Act — governed skills</h3>
+    <h3><span class="dot pink"></span>Act — governed skills</h3>
     <button class="sample">send an email to partner@example.com with subject 'deck ready' saying the board deck is final</button>
     <button class="sample">nudge delegate@example.com about C-E7A4D006</button>
     <button class="sample">record decision: we will pilot the new tool for 30 days because the team asked for evidence before rollout</button>
@@ -98,20 +221,34 @@
 </main>
 <footer>
   <input id="q" placeholder="Ask, or tell me to do something&hellip;" autocomplete="off">
-  <button id="send">Send</button>
+  <button id="send">Send &nbsp;&rarr;</button>
 </footer>
 <script>
 const log = document.getElementById("log");
 const q = document.getElementById("q");
-const actorSel = document.getElementById("actor");
-const TIERS = {
-  "leader@example.com": "Principal: full authority in own tenant",
-  "cos@example.com": "send_email T1 (Go/No-Go) · nudge/draft/record T2 (auto)",
-  "delegate@example.com": "draft_email T0 (draft-only) · create_commitment T1",
-  "stranger@example.com": "No grants — everything should be denied",
+const personaBtns = document.querySelectorAll(".persona-btn");
+
+const PERSONA_INFO = {
+  "leader@example.com":   { label: "Principal",       color: "var(--blue)",   tier: "Principal: full authority in own tenant" },
+  "cos@example.com":      { label: "Chief of Staff",  color: "var(--pink)",   tier: "send_email T1 (Go/No-Go) · nudge/draft/record T2 (auto)" },
+  "delegate@example.com": { label: "Delegate",        color: "var(--orange)", tier: "draft_email T0 (draft-only) · create_commitment T1" },
+  "stranger@example.com": { label: "Unauthorized",    color: "var(--red)",    tier: "No grants — everything should be denied" },
 };
-function tiernote() { document.getElementById("tiernote").textContent = TIERS[actorSel.value]; }
-actorSel.onchange = tiernote; tiernote();
+const PATH_COLORS = {
+  brief: "var(--blue)", today: "var(--blue)", prep: "var(--blue)", me: "var(--blue)", vector: "var(--blue)",
+  commitments: "var(--blue)", decisions: "var(--purple)", eligibility: "var(--orange)", audit: "var(--orange)",
+  skill: "var(--pink)", confirm: "var(--green)",
+};
+
+let currentActor = "cos@example.com";
+function selectPersona(val) {
+  currentActor = val;
+  personaBtns.forEach(b => b.classList.toggle("active", b.dataset.value === val));
+  document.getElementById("tiernote").textContent = PERSONA_INFO[val].tier;
+  document.documentElement.style.setProperty("--persona", PERSONA_INFO[val].color);
+}
+personaBtns.forEach(b => b.onclick = () => selectPersona(b.dataset.value));
+selectPersona(currentActor);
 
 function add(cls, html) {
   const div = document.createElement("div");
@@ -122,46 +259,236 @@ function add(cls, html) {
   return div;
 }
 const esc = s => s.replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const now = () => new Date().toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"});
+
+/* ---- structured answer rendering ----
+   cos-chat returns plain text; these functions turn its known shapes
+   (meeting lists, commitment/decision rows, action cards, briefs, etc.)
+   into readable cards instead of a raw monospace dump. Anything that
+   doesn't match a known shape just falls back to plain text — never broken. */
+
+function rowTemplate(id, status, main, sub, overdue) {
+  const idColor = id.startsWith("D-") ? "a-id-purple" : id.startsWith("A-") ? "a-id-pink" : "a-id-blue";
+  return `<div class="a-row${overdue ? " a-row-overdue" : ""}">` +
+         `<span class="a-id ${idColor}">${id}</span>` +
+         `<div class="a-main">${main}${status ? ` <span class="a-status a-status-${status.toLowerCase()}">${esc(status)}</span>` : ""}` +
+         (sub ? `<div class="a-sub">${sub}</div>` : "") + `</div></div>`;
+}
+
+function renderMeetingRow(when, titleFull, id) {
+  let title = titleFull, loc = "", people = [], mm;
+  if (mm = title.match(/^(.*?)\s—\s(?:with\s)?(.+)$/)) { title = mm[1]; people = mm[2].split(",").map(s => s.trim()); }
+  if (mm = title.match(/^(.*?)\s@\s(.+)$/)) { title = mm[1]; loc = mm[2]; }
+  return `<div class="a-row a-row-meeting">` +
+         `<span class="a-time">${esc(when)}</span>` +
+         `<div class="a-main">${esc(title)}${loc ? ` <span class="a-loc">@ ${esc(loc)}</span>` : ""}` +
+         (people.length ? `<div class="a-people">${people.map(p => `<span class="a-person">${esc(p)}</span>`).join("")}</div>` : "") +
+         `</div>${id ? `<span class="a-id a-id-blue">${id}</span>` : ""}</div>`;
+}
+
+function renderIdRow(id, restRaw) {
+  let rest = restRaw.trim(), status = "", m;
+  if (m = rest.match(/^\[([A-Z]+)\]\s*(.*)$/)) { status = m[1]; rest = m[2]; }
+
+  if (m = rest.match(/^(\d{4}-\d{2}-\d{2})\sby\s(.+?):\s(.+)$/))
+    return rowTemplate(id, status, esc(m[3]), `${m[1]} &middot; by ${esc(m[2])}`);
+
+  if (m = rest.match(/^(?:was\s)?due\s(\d{4}-\d{2}-\d{2}):\s(.+?)\s->\s(.+?):\s(.+)$/))
+    return rowTemplate(id, status, esc(m[4]), `due ${m[1]} &middot; ${esc(m[2])} &rarr; ${esc(m[3])}`);
+
+  if (m = rest.match(/^due\s(\d{4}-\d{2}-\d{2})\s{1,2}(.+?)\s->\s(.+?):\s(.+)$/))
+    return rowTemplate(id, status, esc(m[4]), `due ${m[1]} &middot; ${esc(m[2])} &rarr; ${esc(m[3])}`);
+
+  if (m = rest.match(/^due\s(\d{4}-\d{2}-\d{2})(\s—\sOVERDUE)?(\s\(slipped\s\d+x\))?\s{1,2}(to|from)\s(.+?):\s(.+)$/)) {
+    const flags = [(m[2] ? "OVERDUE" : ""), (m[3] ? m[3].trim() : "")].filter(Boolean).join(" &middot; ");
+    const dir = m[4] === "to" ? `&rarr; ${esc(m[5])}` : `${esc(m[5])} &rarr;`;
+    return rowTemplate(id, status, esc(m[6]), `due ${m[1]} &middot; ${dir}${flags ? " &middot; " + flags : ""}`, !!m[2]);
+  }
+
+  if (m = rest.match(/^due\s(\d{4}-\d{2}-\d{2})(\sOVERDUE)?(\s\(slipped\s\d+x\))?:\s(.+?)\s->\s(.+?):\s(.+)$/)) {
+    const flags = [(m[2] ? "OVERDUE" : ""), (m[3] ? m[3].trim() : "")].filter(Boolean).join(" &middot; ");
+    return rowTemplate(id, status, esc(m[6]), `due ${m[1]} &middot; ${esc(m[4])} &rarr; ${esc(m[5])}${flags ? " &middot; " + flags : ""}`, !!m[2]);
+  }
+
+  if (m = rest.match(/^\(slipped\s(\d+)x\)\s(.+?):\s(.+)$/))
+    return rowTemplate(id, status, esc(m[3]), `${esc(m[2])} &middot; slipped ${m[1]}&times;`);
+
+  if (m = rest.match(/^(.+?):\s(.+)$/))
+    return rowTemplate(id, status, esc(m[2]), esc(m[1]));
+
+  return rowTemplate(id, status, esc(rest), "");
+}
+
+function renderLine(line) {
+  let m;
+  if (/^\s*>>/.test(line)) return "";  // Go/No-Go CTA text — buttons already cover this
+
+  if (m = line.match(/^Attendees:\s(.+)$/)) {
+    const people = m[1] === "none listed" ? [] : m[1].split(",").map(s => s.trim());
+    return `<div class="a-people-row"><span class="a-sub-label">Attendees</span>` +
+           `<div class="a-people">${people.length ? people.map(p => `<span class="a-person">${esc(p)}</span>`).join("") : '<span class="a-person a-person-empty">none listed</span>'}</div></div>`;
+  }
+  if (m = line.match(/^Tip:\s(.+)$/)) return `<div class="a-tip">${esc(m[1])}</div>`;
+  if (m = line.match(/^([^\s].+?)\s\((\d+)\):$/))
+    return `<div class="a-subheader">${esc(m[1])}<span class="a-badge">${m[2]}</span></div>`;
+
+  if (m = line.match(/^\s*(A-[A-Z0-9]+)\s(\S+)\sto\s(.+?)\s\((.+?)\)\s—\sproposed by\s(.+)$/))
+    return rowTemplate(m[1], "", `${esc(m[2].replace(/_/g, " "))} to <b>${esc(m[3])}</b>`, `${esc(m[4])} &middot; proposed by ${esc(m[5])}`);
+
+  if (m = line.match(/^\s*(\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2})?)\s{2}(.+?)\s{2}\[(M-[A-Z0-9]+)\]$/))
+    return renderMeetingRow(m[1], m[2], m[3]);
+  if (m = line.match(/^\s*(\d{2}:\d{2})\s{2}(.+)$/))
+    return renderMeetingRow(m[1], m[2], null);
+  if (m = line.match(/^\s*(\d{4}-\d{2}-\d{2})\s{2}(.+)$/))
+    return renderMeetingRow(m[1], m[2], null);
+
+  if (m = line.match(/^\s*(C-[A-Z0-9]+|D-[A-Z0-9]+)\b(.*)$/))
+    return renderIdRow(m[1], m[2]);
+
+  if (m = line.match(/^\s*v(\d+)\s+(\S+)\s+(.+?)\s+by\s+(\S+)\s+\[basis:\s(.+)\]$/))
+    return `<div class="a-row"><span class="a-time">v${m[1]}</span><div class="a-main">${esc(m[3])} by <b>${esc(m[4])}</b>` +
+           `<div class="a-sub">${esc(m[2])} &middot; basis: ${esc(m[5])}</div></div></div>`;
+
+  if (m = line.match(/^\s{4,}(basis|supersedes|revisited):\s(.+)$/))
+    return `<div class="a-row a-row-sub"><span class="a-sub-label">${esc(m[1])}</span><div class="a-main">${esc(m[2])}</div></div>`;
+
+  if (m = line.match(/^\s{2}(To|Subject|Body|Policy basis):\s(.+)$/))
+    return `<div class="a-field"><span class="a-field-label">${esc(m[1])}</span><span class="a-field-value">${esc(m[2])}</span></div>`;
+
+  if (m = line.match(/^\s{2}(Executed \(outbox\).*|Draft only.*)$/))
+    return `<div class="a-note">${esc(m[1])}</div>`;
+
+  const trimmed = line.trim();
+  if (!trimmed) return "";
+  return `<div class="a-plain">${esc(trimmed)}</div>`;
+}
+
+function renderNarrative(text) {
+  let priorities = [], risk = "";
+
+  // preferred structured format: "Priorities: a; b; c" / "Biggest risk: x" (own lines)
+  let m = text.match(/Priorities:\s*([^\n]+?)(?:\s*Biggest risk:|\s*$)/i);
+  if (m) priorities = m[1].split(/;\s*|(?:\(\d+\)\s*)/).map(s => s.trim()).filter(Boolean);
+  m = text.match(/Biggest risk:\s*(.+)$/is);
+  if (m) risk = m[1].trim();
+
+  // fallback: older free-form "Top priorities: (1) ... (2) ... Biggest risk: ..." paragraph
+  if (!priorities.length && !risk) {
+    const parts = text.split(/Biggest risk:/i);
+    risk = parts[1] ? parts[1].trim() : "";
+    const pm = parts[0].match(/Top priorities:\s*(.+)/i);
+    if (pm) priorities = pm[1].split(/\(\d+\)\s*/).map(s => s.replace(/[;.]\s*$/, "").trim()).filter(Boolean);
+  }
+
+  if (!priorities.length && !risk) return `<p class="a-text">${esc(text)}</p>`;
+  let html = "";
+  if (priorities.length)
+    html += `<div class="a-narrative-label">Top priorities</div><ul class="a-priorities">` +
+            priorities.map(p => `<li>${esc(p)}</li>`).join("") + `</ul>`;
+  if (risk)
+    html += `<div class="a-risk"><span>&#9888;&#65039;</span><div><div class="a-narrative-label">Biggest risk</div>${esc(risk)}</div></div>`;
+  return html;
+}
+
+function renderBlock(block) {
+  const lines = block.split("\n").filter(l => l.length);
+  if (!lines.length) return "";
+  const deniedFlag = /denied|cannot|no grants|no one is currently authorized|failed|error/i.test(lines[0]);
+  let headerHtml = "", bodyLines = lines, m;
+
+  if (m = lines[0].match(/^TOP OF MIND:\s(.+)$/)) {
+    const narrative = [m[1], ...lines.slice(1)].join(" ");
+    return `<div class="a-block a-block-highlight"><div class="a-header">&#10024; Top of mind</div>${renderNarrative(narrative)}</div>`;
+  }
+  if (m = lines[0].match(/^MORNING BRIEF — (.+)$/)) {
+    headerHtml = `<div class="a-header a-header-lg">&#9728;&#65039; Morning brief <span class="a-badge">${esc(m[1])}</span></div>`;
+    bodyLines = lines.slice(1);
+  } else if (m = lines[0].match(/^PREP — (.+?)\s+\((.+)\)$/)) {
+    headerHtml = `<div class="a-header a-header-lg">Prep: ${esc(m[1])} <span class="a-badge">${esc(m[2])}</span></div>`;
+    bodyLines = lines.slice(1);
+  } else if (m = lines[0].match(/^(PROPOSED|EXECUTED|DRAFT)\s—\s(.+?)\s\[(A-[A-Z0-9]+)\]\s+\(tier\s(T\d)\)$/)) {
+    headerHtml = `<div class="a-header"><span class="a-status a-status-${m[1].toLowerCase()}">${m[1]}</span> ${esc(m[2])} <span class="a-id a-id-pink">${m[3]}</span><span class="a-badge">tier ${m[4]}</span></div>`;
+    bodyLines = lines.slice(1);
+  } else if (m = lines[0].match(/^Recorded (D-[A-Z0-9]+):\s(.+)$/)) {
+    headerHtml = `<div class="a-header"><span class="a-status a-status-executed">&#10003; Recorded</span> ${esc(m[2])} <span class="a-id a-id-purple">${m[1]}</span></div>`;
+    bodyLines = lines.slice(1);
+  } else if (m = lines[0].match(/^Audit trail for (.+):$/)) {
+    headerHtml = `<div class="a-header">Audit trail <span class="a-id" style="background:var(--ink-faint)">${esc(m[1])}</span></div>`;
+    bodyLines = lines.slice(1);
+  } else if (m = lines[0].match(/^Authorized to (.+?) for (.+?) \(live policy\):\s(.+)$/)) {
+    const people = m[3].split(",").map(s => s.trim());
+    headerHtml = `<div class="a-header">Who can ${esc(m[1])}<span class="a-badge">${people.length}</span></div>` +
+                 `<div class="a-people">${people.map(p => `<span class="a-person">${esc(p)}</span>`).join("")}</div>`;
+    bodyLines = [];
+  } else if (m = lines[0].match(/^(\d+)\scommitment\(s\):$/)) {
+    headerHtml = `<div class="a-header">Commitments <span class="a-badge">${m[1]}</span></div>`;
+    bodyLines = lines.slice(1);
+  } else if (m = lines[0].match(/^(.+?)\s\((\d+)\):$/)) {
+    headerHtml = `<div class="a-header">${esc(m[1])}<span class="a-badge">${m[2]}</span></div>`;
+    bodyLines = lines.slice(1);
+  } else if (m = lines[0].match(/^([A-Za-z][A-Za-z' ]+):$/)) {
+    headerHtml = `<div class="a-header">${esc(m[1])}</div>`;
+    bodyLines = lines.slice(1);
+  }
+
+  const rowsHtml = bodyLines.map(renderLine).filter(Boolean).join("");
+  const cls = "a-block" + (deniedFlag ? " a-block-denied" : "");
+  if (!headerHtml && !rowsHtml) return "";
+  return `<div class="${cls}">${headerHtml}${rowsHtml ? `<div class="a-rows">${rowsHtml}</div>` : ""}</div>`;
+}
+
+function renderAnswer(text) {
+  if (!text) return '<div class="a-plain">(empty)</div>';
+  const blocks = text.split(/\n\s*\n/).map(b => b.trim()).filter(Boolean);
+  const html = blocks.map(renderBlock).filter(Boolean).join("");
+  return `<div class="answer-body">${html || `<div class="a-plain">${esc(text)}</div>`}</div>`;
+}
 
 async function ask(question) {
-  add("user", esc(question));
-  const think = add("bot thinking", "routing&hellip;");
+  const p = PERSONA_INFO[currentActor];
+  add("user", `<div class="msg-label"><span><span class="pdot-inline" style="background:${p.color}"></span>You &middot; ${esc(p.label)}</span><span class="time">${now()}</span></div>${esc(question)}`);
+  const think = add("bot thinking", `<div class="msg-label">AI Chief of Staff</div>routing&hellip;`);
   try {
     const r = await fetch("/chat", {
       method: "POST",
       headers: {"Content-Type": "application/json",
-                "X-Actor": actorSel.value, "X-Principal": "principal-001"},
+                "X-Actor": currentActor, "X-Principal": "principal-001"},
       body: JSON.stringify({question}),
     });
     const d = await r.json();
     think.remove();
     const routing = d.routing || {};
-    let html = "<pre>" + esc(d.answer || JSON.stringify(d)) + "</pre>";
-    html += `<div class="meta"><span class="chip">path: ${esc(routing.path || "?")}</span>` +
-            (routing.reasoning ? `<br>${esc(routing.reasoning)}` : "") + "</div>";
+    let html = `<div class="msg-label"><span>AI Chief of Staff</span><span class="time">${now()}</span></div>`;
+    html += renderAnswer(d.answer || JSON.stringify(d));
+    const pathColor = PATH_COLORS[routing.path] || "var(--ink-faint)";
+    html += `<div class="meta"><span class="chip"><span class="dot" style="background:${pathColor}"></span>path: ${esc(routing.path || "?")}</span>` +
+            (routing.reasoning ? `<div class="reasoning">${esc(routing.reasoning)}</div>` : "") + "</div>";
     const div = add("bot", html);
     const m = (d.answer || "").match(/PROPOSED[\s\S]*?\b(A-[A-Z0-9]{8})\b/);
     if (m) {
       const aid = m[1];
       const bar = document.createElement("div");
       bar.className = "gonogo";
-      bar.innerHTML = `<button class="go">Go — execute ${aid}</button>` +
-                      `<button class="nogo">No-Go — cancel</button>`;
+      bar.innerHTML = `<div class="gonogo-label"><span class="pulse"></span>Pending confirmation &middot; ${aid}</div>` +
+                      `<div class="gonogo-actions">` +
+                      `<button class="go">&#10003; Go — Execute</button>` +
+                      `<button class="nogo">&#10005; No-Go — Cancel</button>` +
+                      `</div>`;
       bar.querySelector(".go").onclick = () => { bar.remove(); ask(`confirm ${aid} go`); };
       bar.querySelector(".nogo").onclick = () => { bar.remove(); ask(`confirm ${aid} no go`); };
       div.appendChild(bar);
     }
   } catch (e) {
     think.remove();
-    add("bot", `<pre>Request failed: ${esc(String(e))}</pre>`);
+    add("bot", `<div class="msg-label">AI Chief of Staff</div>` + renderAnswer(`Request failed: ${String(e)}`));
   }
 }
 document.getElementById("send").onclick = () => { if (q.value.trim()) { ask(q.value.trim()); q.value = ""; } };
 q.addEventListener("keydown", e => { if (e.key === "Enter") document.getElementById("send").click(); });
 document.querySelectorAll(".sample").forEach(b => b.onclick = () => ask(b.textContent));
-add("bot", "<pre>Ready. Pick a persona (top right), then try the sample prompts — " +
-           "or just talk to me.\n\nTip: switch to the Unauthorized persona and try an " +
-           "action to watch policy say no.</pre>");
+add("bot", `<div class="msg-label">AI Chief of Staff</div>` + renderAnswer(
+  "Ready. Pick a persona (top right), then try the sample prompts — or just talk to me.\n\n" +
+  "Tip: switch to the Unauthorized persona and try an action to watch policy say no."));
 </script>
 </body>
 </html>
