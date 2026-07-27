@@ -91,7 +91,6 @@ Every phase ships with a black-box verify script, and routing has a golden eval 
 | `services/decision-service` | Decision memory, supersedes | 8005 |
 | `services/cos-indexer` | Kafka → Neo4j pipelines | — |
 | `services/calendar-connector` | iCal feed → meeting-service | — |
-| `legacy/` | Earlier single-file prototype (ingest → extract → brief) | — |
 
 ## Honest boundaries
 
