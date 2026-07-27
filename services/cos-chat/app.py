@@ -577,3 +577,9 @@ def chat(q: Question, x_actor: str = Header(...), x_principal: str = Header(...)
 @app.get("/health")
 def health():
     return {"ok": True}
+
+
+@app.get("/")
+def ui():
+    from fastapi.responses import FileResponse
+    return FileResponse("ui.html", media_type="text/html")
