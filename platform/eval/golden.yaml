@@ -1,0 +1,100 @@
+# Golden routing evals — black-box: POST /chat, assert routing.path (+ optional answer content).
+# Run: ./scripts/prove-routing.sh          (add --fallback to test the no-LLM router)
+# Families mirror the router paths. Keep every case phrased differently from the router prompt.
+
+- family: me
+  cases:
+    - q: "what is on my plate"
+      path: me
+    - q: "what do I owe people right now"
+      path: me
+    - q: "anything I should chase people about?"
+      path: me
+      llm_only: true
+
+- family: today
+  cases:
+    - q: "meetings today"
+      path: today
+    - q: "what does my week look like"
+      path: today
+    - q: "how packed are my next few days?"
+      path: today_or_me   # either is acceptable: schedule-load reads both ways
+      llm_only: true
+
+- family: prep
+  cases:
+    - q: "prep me for board pack"
+      path: prep
+    - q: "get me ready for my next meeting"
+      path: prep
+      llm_only: true
+
+- family: brief
+  cases:
+    - q: "morning brief"
+      path: brief
+      answer_contains: "MORNING BRIEF"
+    - q: "give me the rundown"
+      path: brief
+    - q: "what do I need to know this morning?"
+      path: brief
+      llm_only: true
+
+- family: eligibility
+  cases:
+    - q: "who can send email"
+      path: eligibility
+      answer_contains: "cos@example.com"
+    - q: "who is authorized to nudge owner"
+      path: eligibility
+    - q: "who's allowed to green-light outgoing mail for the boss?"
+      path: eligibility
+      llm_only: true
+
+- family: audit
+  cases:
+    - q: "who created C-73F28D8C"
+      path: audit
+    - q: "show the history of C-73F28D8C"
+      path: audit
+
+- family: commitments
+  cases:
+    - q: "show slipped commitments"
+      path: commitments
+    - q: "open items for delegate@example.com"
+      path: commitments
+
+- family: decisions
+  cases:
+    - q: "what did we decide about the vendor?"
+      path: decisions
+      answer_contains: "D-"
+    - q: "why did we choose Bravo"
+      path: decisions
+      llm_only: true
+
+- family: skill
+  cases:
+    # Bare send with no content: LLM may judge draft_email (T2 auto) instead of
+    # send_email — both are correct; assert only the path.
+    - q: "send an email to partner@example.com"
+      path: skill
+    # Fully specified send must produce the T1 Go/No-Go card.
+    - q: "send an email to partner@example.com with subject 'deck ready' saying the board deck is final"
+      path: skill
+      answer_contains: "confirm"
+    - q: "nudge delegate@example.com about C-73F28D8C"
+      path: skill
+    - q: "record decision: test eval decision because evals need one"
+      path: skill
+      answer_contains: "Recorded D-"
+
+- family: confirm
+  cases:
+    - q: "confirm A-00000000 go"
+      path: confirm
+      answer_contains: "not found"
+    - q: "cancel A-00000000"
+      path: confirm

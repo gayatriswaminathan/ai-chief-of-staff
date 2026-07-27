@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SecurityEvent",
+  "description": "Written in the same MongoDB transaction as every business record mutation. The audit spine.",
+  "type": "object",
+  "required": ["eventId", "principalId", "actor", "action", "entityType", "entityId", "entityVersion", "occurredAt", "authorization"],
+  "properties": {
+    "eventId": { "type": "string", "description": "UUID" },
+    "principalId": { "type": "string", "description": "Tenant — which leader this action was for" },
+    "actor": { "type": "string", "description": "Authenticated subject who acted (from JWT)" },
+    "onBehalfOf": { "type": "string", "description": "Service account that carried the call, e.g. svc-commitment" },
+    "action": { "type": "string", "description": "create | update | complete | slip | drop | send | move | ..." },
+    "entityType": { "type": "string", "enum": ["meeting", "decision", "commitment", "action", "brief"] },
+    "entityId": { "type": "string" },
+    "entityVersion": { "type": "integer" },
+    "occurredAt": { "type": "string", "format": "date-time" },
+    "authorization": {
+      "type": "object",
+      "required": ["allow", "allowBasis"],
+      "properties": {
+        "allow": { "type": "boolean" },
+        "allowBasis": { "type": "string", "description": "Which OPA rule permitted this — copied verbatim from the decision" },
+        "tier": { "type": "string", "enum": ["T0", "T1", "T2", "none"] },
+        "confirmation": { "type": "string", "description": "go | no_go | auto (T2)", "enum": ["go", "no_go", "auto"] }
+      }
+    },
+    "details": { "type": "object", "description": "Action-specific payload snapshot" }
+  }
+}

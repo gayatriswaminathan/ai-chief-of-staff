@@ -1,0 +1,17 @@
+# Principal's priorities — the brief ranks items by impact on these.
+# Pattern: Murchison goals.yaml. The agent flags when the calendar/asks
+# don't match the goals ("judgment bottleneck" guard).
+quarter: 2026-Q3
+goals:
+  - id: G1
+    goal: RegRadar regulatory migration lands with zero missed filing deadlines
+    weight: 1.0
+  - id: G2
+    goal: Atlas adoption reaches 85% WAU with a clean MRG record
+    weight: 0.8
+  - id: G3
+    goal: Client onboarding pilot ships Sept 1
+    weight: 0.7
+  - id: G4
+    goal: Q3 OKRs credible and defensible at leadership review
+    weight: 0.6

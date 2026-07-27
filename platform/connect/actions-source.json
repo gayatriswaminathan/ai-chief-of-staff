@@ -1,0 +1,14 @@
+{
+  "name": "actions-source",
+  "config": {
+    "connector.class": "com.mongodb.kafka.connect.MongoSourceConnector",
+    "connection.uri": "mongodb://mongo:27017/?replicaSet=rs0",
+    "database": "cos_actions",
+    "collection": "actions",
+    "topic.namespace.map": "{\"cos_actions.actions\": \"actions\"}",
+    "publish.full.document.only": "true",
+    "output.format.value": "json",
+    "output.format.key": "json",
+    "startup.mode": "copy_existing"
+  }
+}

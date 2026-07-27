@@ -1,0 +1,24 @@
+{
+  "principals": {
+    "principal-001": {
+      "subject": "leader@example.com",
+      "delegations": {
+        "cos@example.com": {
+          "ingest_meeting": { "tier": "T2" },
+          "draft_email": { "tier": "T2" },
+          "send_email": { "tier": "T1" },
+          "move_meeting": { "tier": "T1" },
+          "decline_meeting": { "tier": "T2" },
+          "assign_task": { "tier": "T1" },
+          "record_decision": { "tier": "T1" },
+          "create_commitment": { "tier": "T2" },
+          "nudge_owner": { "tier": "T2" }
+        },
+        "delegate@example.com": {
+          "draft_email": { "tier": "T0" },
+          "create_commitment": { "tier": "T1" }
+        }
+      }
+    }
+  }
+}

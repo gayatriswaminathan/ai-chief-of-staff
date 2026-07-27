@@ -1,0 +1,22 @@
+# Graduated Autonomy Model — pattern: De Jesus (2026), aligned with
+# JPMC's published agent-security doctrine (authorization boundaries,
+# human approval before action, auditability).
+levels:
+  L1_approval_required:   # every action needs explicit human approval
+    - send_message
+    - create_calendar_event
+    - assign_ticket
+  L2_supervised:          # agent acts, human notified, 1-click undo
+    - draft_reply          # drafts only; never sends
+    - label_thread
+  L3_autonomous:          # allowed without approval
+    - read_sources
+    - generate_brief
+    - write_audit_log
+# Graduation policy: an action class moves up one level only after
+# 30 consecutive approvals with zero corrections; any correction
+# resets the counter. Trust decays after 90 days without use.
+hard_rules:
+  - never_drop_sources     # every claim in the brief links to its source item
+  - never_auto_send_to_vip
+  - no_action_outside_declared_scopes

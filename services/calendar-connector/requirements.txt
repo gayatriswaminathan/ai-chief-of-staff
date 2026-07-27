@@ -1,0 +1,3 @@
+httpx==0.27.0
+icalendar==5.0.13
+recurring-ical-events==2.2.3

@@ -1,0 +1,346 @@
+[
+ {
+  "id": "em-006",
+  "source": "outlook",
+  "thread": "Intro \u2014 new Model Risk liaison for your portfolio",
+  "from": "James Whitfield (Model Risk Governance)",
+  "to": [
+   "Regina Chan"
+  ],
+  "date": "2026-07-20T09:10:00-04:00",
+  "body": "Regina, I've been assigned as MRG liaison for your portfolio effective this week. I'd like 30 minutes to walk through the review calendar \u2014 Atlas Wave 2 and the RegRadar anomaly-detection component both have checkpoints in the next six weeks. My calendar is open Thursday/Friday. James"
+ },
+ {
+  "id": "mt-003",
+  "source": "meetings",
+  "title": "1:1 Regina / Marcus",
+  "date": "2026-07-20T15:00:00-04:00",
+  "attendees": [
+   "Regina Chan",
+   "Marcus Webb"
+  ],
+  "notes": "Marcus wants OKR position (40% vs 25%) with rationale by Thursday \u2014 'a position, not options.' Discussed possible headcount move from Onboarding to RegRadar; Regina to model impact on Sept 1 pilot before 4:30 1:1 on Jul 23. Marcus flagged offsite deliverables due Jul 30."
+ },
+ {
+  "id": "tm-008",
+  "source": "teams",
+  "channel": "RegRadar Working Group",
+  "from": "James Whitfield (MRG)",
+  "date": "2026-07-21T11:25:00-04:00",
+  "body": "Note for planning: the anomaly-detection component in RegRadar Phase 2 qualifies as a model under the firm's inventory definition. It needs registration before UAT, not after. Please build 3 weeks into the plan."
+ },
+ {
+  "id": "jr-003",
+  "source": "jira",
+  "key": "REG-1215",
+  "project": "RegRadar",
+  "title": "Register anomaly-detection component with Model Risk inventory",
+  "status": "To Do",
+  "assignee": "Unassigned",
+  "due": null,
+  "updated": "2026-07-21T11:40:00-04:00",
+  "comment": "Per MRG: registration required BEFORE UAT. Adds ~3 weeks. Not yet in Phase 2 plan. NO OWNER ASSIGNED."
+ },
+ {
+  "id": "mt-002",
+  "source": "meetings",
+  "title": "RegRadar weekly working group",
+  "date": "2026-07-21T14:00:00-04:00",
+  "attendees": [
+   "Regina Chan",
+   "Dana Liu",
+   "Katherine Boyd",
+   "James Whitfield"
+  ],
+  "notes": "Phase 1 cutover: 14/16 clean. COMMITMENT: Dana closes 2052a variance + FR Y-9C block by Jul 29. COMMITMENT: Katherine signs off by Jul 28 IF variance doc lands by EOD Jul 24. NEW RISK: anomaly-detection component requires model registration BEFORE UAT (+3 weeks, not in plan, no owner). ACTION: Regina to decide whether Phase 2 timeline absorbs or extends."
+ },
+ {
+  "id": "em-010",
+  "source": "outlook",
+  "thread": "Confidential: headcount reallocation proposal",
+  "from": "Marcus Webb (MD)",
+  "to": [
+   "Regina Chan"
+  ],
+  "date": "2026-07-21T18:40:00-04:00",
+  "body": "Between us for now \u2014 I'm considering moving 3 heads from the onboarding revamp to RegRadar to protect the regulatory deadline. Want your read on the trade-off before I socialize it. This stays between us until the Thursday review. Marcus"
+ },
+ {
+  "id": "em-004",
+  "source": "outlook",
+  "thread": "RegRadar migration \u2014 Phase 1 cutover results",
+  "from": "Dana Liu (Eng Lead, RegRadar)",
+  "to": [
+   "Regina Chan"
+  ],
+  "cc": [
+   "RegRadar working group"
+  ],
+  "date": "2026-07-21T19:33:00-04:00",
+  "body": "Cutover completed Saturday. 14 of 16 report families reconciled clean. Two exceptions: the 2052a liquidity feed shows a 0.3% variance vs legacy (root cause: timezone handling in the source extract \u2014 fix in review), and the FR Y-9C schedule is blocked on upstream data-quality sign-off from Finance. We committed to closing both by July 29. Dana"
+ },
+ {
+  "id": "mt-001",
+  "source": "meetings",
+  "title": "Atlas Wave 2 go/no-go sync",
+  "date": "2026-07-22T09:00:00-04:00",
+  "attendees": [
+   "Regina Chan",
+   "Priya Nair",
+   "Raj Patel",
+   "James Whitfield"
+  ],
+  "notes": "DECIDED: Hold Wave 2 at 2,400 users; trading-desk cohort deferred pending higher-tier MRG review. DECIDED: SEC-4411 fix (due Jul 28) is a hard gate for the Aug 4 checkpoint. ACTION: Priya to draft comms (done Jul 23). ACTION: Regina to brief Marcus before Thursday review. OPEN QUESTION: whether trading-desk deferral needs a separate exec comm \u2014 two MDs already asking."
+ },
+ {
+  "id": "tm-001",
+  "source": "teams",
+  "channel": "Atlas Rollout",
+  "from": "Priya Nair",
+  "date": "2026-07-22T10:05:00-04:00",
+  "body": "Decision from sync: Wave 2 stays at 2,400 users pending MRG checkpoint Aug 4. @Regina Chan can you confirm you're aligned so I can update the rollout comms?"
+ },
+ {
+  "id": "mt-004",
+  "source": "meetings",
+  "title": "Onboarding revamp steering",
+  "date": "2026-07-22T11:00:00-04:00",
+  "attendees": [
+   "Regina Chan",
+   "Sofia Marchetti",
+   "Luis Herrera"
+  ],
+  "notes": "KYC consolidation blocked on LatAm CCO (back Aug 3). Luis exploring conditional approval via deputy CCO \u2014 answer expected Jul 24. DECIDED: if no conditional path by Jul 25, escalate to Marcus rather than re-baseline. Sept 1 pilot protected as priority."
+ },
+ {
+  "id": "em-002",
+  "source": "outlook",
+  "thread": "Vendor risk assessment \u2014 Meridian Analytics contract",
+  "from": "Tom Okafor (Third-Party Oversight)",
+  "to": [
+   "Regina Chan"
+  ],
+  "date": "2026-07-22T11:15:00-04:00",
+  "body": "Regina, the Meridian renewal is blocked pending your sign-off on the residual-risk memo. Legal cleared their SOC 2 report but the data-residency addendum still names their Dublin region as failover. Need your decision by Friday July 24 or the contract lapses into month-to-month at the 12% uplift. Tom"
+ },
+ {
+  "id": "tm-007",
+  "source": "teams",
+  "channel": "Onboarding Revamp",
+  "from": "Luis Herrera (LatAm Compliance)",
+  "date": "2026-07-22T13:10:00-04:00",
+  "body": "To be clear from our side: we support consolidation in principle. But retiring the supplemental checklist without CCO sign-off exposes us on local reg 4373/2024. A conditional approval path might work \u2014 checking with our deputy CCO."
+ },
+ {
+  "id": "em-005",
+  "source": "outlook",
+  "thread": "RE: Client onboarding revamp \u2014 KYC checklist consolidation",
+  "from": "Sofia Marchetti (Ops Transformation)",
+  "to": [
+   "Regina Chan"
+  ],
+  "date": "2026-07-22T14:20:00-04:00",
+  "body": "Regina \u2014 we need an escalation. The KYC checklist consolidation is stuck because the LatAm compliance team won't retire their supplemental checklist without sign-off from their regional CCO, who is out until Aug 3. This puts the Sept 1 pilot at risk. Can you raise with Marcus or should we re-baseline? Sofia"
+ },
+ {
+  "id": "tm-005",
+  "source": "teams",
+  "channel": "Atlas Rollout",
+  "from": "Security Eng (Raj Patel)",
+  "date": "2026-07-22T15:30:00-04:00",
+  "body": "SEC-4411 update: prompt-injection coverage now 82%. Remaining gap is the document-upload path. Fix ETA July 28. This gates the MRG checkpoint per James Whitfield."
+ },
+ {
+  "id": "jr-004",
+  "source": "jira",
+  "key": "ATL-4411",
+  "project": "Atlas",
+  "title": "SEC-4411: prompt-injection test coverage below target (82% vs 95%)",
+  "status": "In Progress",
+  "assignee": "Raj Patel",
+  "due": "2026-07-28",
+  "updated": "2026-07-22T15:35:00-04:00",
+  "comment": "Document-upload path remains. Gates MRG checkpoint Aug 4."
+ },
+ {
+  "id": "jr-006",
+  "source": "jira",
+  "key": "ONB-901",
+  "project": "Onboarding Revamp",
+  "title": "UAT environment provisioning for pilot cohort",
+  "status": "In Progress",
+  "assignee": "Infra team",
+  "due": "2026-08-08",
+  "updated": "2026-07-22T16:00:00-04:00",
+  "comment": "On track. Note: compresses if KYC consolidation slips past Aug 5."
+ },
+ {
+  "id": "em-001",
+  "source": "outlook",
+  "thread": "RE: Atlas rollout \u2014 Wave 2 entitlements",
+  "from": "Priya Nair (Product Ops)",
+  "to": [
+   "Regina Chan"
+  ],
+  "cc": [
+   "Atlas core team"
+  ],
+  "date": "2026-07-22T16:42:00-04:00",
+  "body": "Regina \u2014 following this morning's sync, we DECIDED to hold Wave 2 entitlements to the 2,400-user cohort rather than expanding to 4,000. Model Risk flagged that the expanded cohort includes trading-desk users, which pushes us into a higher review tier. We can revisit after the MRG checkpoint on Aug 4. Priya"
+ },
+ {
+  "id": "em-007",
+  "source": "outlook",
+  "thread": "RE: Offsite logistics + agenda owners",
+  "from": "Alicia Fontaine (EA)",
+  "to": [
+   "Regina Chan"
+  ],
+  "date": "2026-07-22T17:55:00-04:00",
+  "body": "Reminder: you own two agenda blocks for the Aug 12 leadership offsite \u2014 the 2027 operating model straw-man and the AI adoption readout. Deck skeletons are due to Marcus's office by July 30. Also: 14 RSVPs confirmed, waiting on 3. Alicia"
+ },
+ {
+  "id": "tm-004",
+  "source": "teams",
+  "channel": "Leadership team (private)",
+  "from": "Marcus Webb",
+  "date": "2026-07-22T20:15:00-04:00",
+  "body": "Team \u2014 Thursday's review moves to 9:00 sharp, 45 min instead of 60. Tighten your sections. Regina, OKR recommendation first, then RegRadar status."
+ },
+ {
+  "id": "em-008",
+  "source": "outlook",
+  "thread": "Atlas usage metrics \u2014 week 29",
+  "from": "Atlas Analytics (automated)",
+  "to": [
+   "Atlas stakeholders"
+  ],
+  "date": "2026-07-23T06:00:00-04:00",
+  "body": "Weekly digest: WAU 1,847 of 2,400 entitled (77%, up from 71%). Top use cases: meeting summarization (34%), document Q&A (28%), draft generation (19%). Flagged: prompt-injection test coverage at 82% vs 95% target \u2014 security review item SEC-4411 remains open."
+ },
+ {
+  "id": "em-003",
+  "source": "outlook",
+  "thread": "FW: Q3 OKR draft \u2014 leadership review Thursday",
+  "from": "Marcus Webb (Regina's manager, MD)",
+  "to": [
+   "Regina Chan"
+  ],
+  "date": "2026-07-23T07:05:00-04:00",
+  "body": "Regina \u2014 before Thursday's leadership review, I want your recommendation on whether we keep the client-onboarding cycle-time OKR at 40% reduction or reset to 25% given the RegRadar dependency slip. Come with a position, not options. Marcus"
+ },
+ {
+  "id": "jr-008",
+  "source": "jira",
+  "key": "OKR-Q3-04",
+  "project": "Q3 Planning",
+  "title": "Finalize client-onboarding cycle-time OKR (40% vs 25% reduction)",
+  "status": "Waiting on Regina Chan",
+  "assignee": "Regina Chan",
+  "due": "2026-07-23",
+  "updated": "2026-07-23T07:10:00-04:00",
+  "comment": "Marcus requires recommendation at Thursday 9:00 leadership review."
+ },
+ {
+  "id": "tm-009",
+  "source": "teams",
+  "channel": "Leadership team (private)",
+  "from": "Alicia Fontaine",
+  "date": "2026-07-23T07:30:00-04:00",
+  "body": "Regina \u2014 your 1:1 with Marcus moved from 2pm to 4:30pm today. He asked that you bring the headcount trade-off analysis."
+ },
+ {
+  "id": "em-009",
+  "source": "outlook",
+  "thread": "RE: RegRadar \u2014 Finance sign-off timeline",
+  "from": "Katherine Boyd (Finance Controller)",
+  "to": [
+   "Regina Chan"
+  ],
+  "cc": [
+   "Dana Liu"
+  ],
+  "date": "2026-07-23T08:12:00-04:00",
+  "body": "Regina \u2014 my team can complete the FR Y-9C data-quality sign-off by July 28, but only if the variance documentation from Dana's team arrives by EOD tomorrow. If it slips, we're into month-end close and the earliest becomes Aug 11. Katherine"
+ },
+ {
+  "id": "jr-002",
+  "source": "jira",
+  "key": "REG-1198",
+  "project": "RegRadar",
+  "title": "FR Y-9C schedule blocked on Finance data-quality sign-off",
+  "status": "Blocked",
+  "assignee": "Dana Liu",
+  "due": "2026-07-29",
+  "updated": "2026-07-23T08:30:00-04:00",
+  "comment": "Dependency: Finance sign-off by Jul 28 requires variance doc by EOD Jul 24."
+ },
+ {
+  "id": "tm-003",
+  "source": "teams",
+  "channel": "Onboarding Revamp",
+  "from": "Sofia Marchetti",
+  "date": "2026-07-23T08:45:00-04:00",
+  "body": "Flagging again for visibility: LatAm CCO out until Aug 3, KYC consolidation blocked. Every day we wait compresses UAT. @Regina Chan need your call on escalate vs re-baseline by tomorrow."
+ },
+ {
+  "id": "jr-005",
+  "source": "jira",
+  "key": "ONB-887",
+  "project": "Onboarding Revamp",
+  "title": "KYC checklist consolidation \u2014 LatAm supplemental checklist retirement",
+  "status": "Blocked",
+  "assignee": "Sofia Marchetti",
+  "due": "2026-08-15",
+  "updated": "2026-07-23T08:50:00-04:00",
+  "comment": "Blocked on LatAm CCO sign-off (out until Aug 3). Conditional-approval path being explored by Luis Herrera. Sept 1 pilot at risk."
+ },
+ {
+  "id": "jr-001",
+  "source": "jira",
+  "key": "REG-1207",
+  "project": "RegRadar",
+  "title": "2052a liquidity feed variance \u2014 timezone handling in source extract",
+  "status": "In Review",
+  "assignee": "Dana Liu",
+  "due": "2026-07-29",
+  "updated": "2026-07-23T09:15:00-04:00",
+  "comment": "Fix implemented, awaiting review. Variance doc drafted for Finance."
+ },
+ {
+  "id": "tm-002",
+  "source": "teams",
+  "channel": "RegRadar Working Group",
+  "from": "Dana Liu",
+  "date": "2026-07-23T09:20:00-04:00",
+  "body": "Variance doc for the 2052a feed is drafted \u2014 in review with my tech lead now. On track to hit Katherine's EOD deadline. Will post here when it's sent."
+ },
+ {
+  "id": "tm-010",
+  "source": "teams",
+  "channel": "Atlas Rollout",
+  "from": "Priya Nair",
+  "date": "2026-07-23T09:40:00-04:00",
+  "body": "Comms draft for Wave 2 hold is ready for review. Also \u2014 heads up that two trading-desk MDs emailed asking why their teams were pulled from the cohort. Suggest we get ahead of it with a one-liner from Regina."
+ },
+ {
+  "id": "tm-006",
+  "source": "teams",
+  "channel": "Vendor Management",
+  "from": "Tom Okafor",
+  "date": "2026-07-23T09:55:00-04:00",
+  "body": "@Regina Chan gentle nudge on the Meridian residual-risk memo \u2014 Friday deadline is real, procurement confirmed the month-to-month uplift kicks in Aug 1 otherwise."
+ },
+ {
+  "id": "jr-007",
+  "source": "jira",
+  "key": "VND-312",
+  "project": "Vendor Risk",
+  "title": "Meridian Analytics renewal \u2014 residual risk memo sign-off",
+  "status": "Waiting on Regina Chan",
+  "assignee": "Tom Okafor",
+  "due": "2026-07-24",
+  "updated": "2026-07-23T10:00:00-04:00",
+  "comment": "Legal cleared SOC 2. Open item: Dublin failover region in data-residency addendum. Decision due Friday."
+ }
+]

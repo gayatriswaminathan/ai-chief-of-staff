@@ -1,0 +1,14 @@
+{
+  "name": "meeting-security-events-source",
+  "config": {
+    "connector.class": "com.mongodb.kafka.connect.MongoSourceConnector",
+    "connection.uri": "mongodb://mongo:27017/?replicaSet=rs0",
+    "database": "security_events",
+    "collection": "meeting_service",
+    "topic.namespace.map": "{\"security_events.meeting_service\": \"meeting_security_events\"}",
+    "publish.full.document.only": "true",
+    "output.format.value": "json",
+    "output.format.key": "json",
+    "startup.mode": "copy_existing"
+  }
+}

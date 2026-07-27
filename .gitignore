@@ -1,0 +1,19 @@
+# Secrets — never commit. platform/.env holds ANTHROPIC_API_KEY and the
+# CALENDAR_ICS_URL (the secret calendar address IS a credential).
+.env
+*.env
+.env.*
+
+# Python
+__pycache__/
+*.pyc
+
+# Local artifacts / runtime output
+out/
+store/audit.jsonl
+store/approval_queue.json
+.DS_Store
+
+# Editors
+.vscode/
+.idea/
