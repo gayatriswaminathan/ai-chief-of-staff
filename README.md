@@ -36,9 +36,27 @@ The system serves a *principal* — any leader, at any level. No leader-specific
 | **Morning brief** | Today's meetings, overdue, due-soon, repeat slippers, actions awaiting Go/No-Go, LLM "top of mind" |
 | **Eligibility vs audit** | *Who can act* = live OPA; *who did act* = graph history with the policy basis that allowed it |
 
-## Architecture (one paragraph)
+## Architecture
 
-Every mutation goes: identity → **OPA preflight** (`allow` + `allow_basis` + tier) → business record **plus security event written in one MongoDB transaction**. Kafka Connect CDC streams both to Kafka; an indexer denormalizes them into a **Neo4j graph** (people, meetings, commitments, decisions, actions, audit events). Chat sends each question through **one LLM routing call** (strict JSON `RouterDecision`; deterministic fallback without a key), then executes deterministically — Cypher plans and formatters, live OPA for eligibility, scripted skills for mutations. No free-form agent loop touches production state.
+**In plain terms:** nothing changes in this system without being checked and recorded at the same moment. Every write — a new commitment, a sent email, a recorded decision — first passes a live permission check, then is saved together with its audit entry in one atomic step, so a change can never exist without its own paper trail. Those writes flow into a graph database that understands how people, meetings, commitments, and decisions relate to each other — that graph is what the chat actually reads from. When you ask a question, an AI figures out *what* you're asking for, but a separate, deterministic system — not the AI acting freely — decides *what's allowed* and carries out the actual read or write.
+
+```mermaid
+flowchart LR
+  ID[Identity] --> OPA{OPA preflight<br/>allow + allow_basis + tier}
+  OPA -->|allow| TXN[("MongoDB<br/>record + security event,<br/>one transaction")]
+  OPA -->|deny| STOP[Denied — with reasons]
+  TXN --> CDC[Kafka Connect CDC]
+  CDC --> KAFKA[("Kafka")]
+  KAFKA --> IDX[cos-indexer]
+  IDX --> GRAPH[("Neo4j graph<br/>people · meetings · commitments<br/>decisions · actions · audit")]
+
+  Q[Your question] --> ROUTE[LLM router<br/>one call, strict JSON]
+  ROUTE --> EXEC[Deterministic execution<br/>Cypher plans · live OPA · scripted skills]
+  EXEC --> GRAPH
+  GRAPH --> ANSWER[Answer — with routing shown]
+```
+
+**Technical detail:** every mutation goes identity → **OPA preflight** (`allow` + `allow_basis` + tier) → business record **plus security event written in one MongoDB transaction**. Kafka Connect CDC streams both to Kafka; an indexer denormalizes them into a **Neo4j graph** (people, meetings, commitments, decisions, actions, audit events). Chat sends each question through **one LLM routing call** (strict JSON `RouterDecision`; deterministic fallback without a key), then executes deterministically — Cypher plans and formatters, live OPA for eligibility, scripted skills for mutations. No free-form agent loop touches production state.
 
 Full design: **[docs/architecture-spec.md](docs/architecture-spec.md)** (starts with a plain-language key-concepts table).
 
@@ -46,8 +64,7 @@ Full design: **[docs/architecture-spec.md](docs/architecture-spec.md)** (starts 
 
 Chat UI at `http://localhost:8002` — persona switcher (Principal / Chief of Staff / Delegate / Unauthorized), routing transparency on every answer, clickable Go/No-Go cards.
 
-<!-- Demo video: record the UI (QuickTime), then drag the .mov into this README
-     using GitHub's web editor - it uploads and embeds automatically. -->
+![Demo](docs/media/demo.gif)
 
 60-second script: as **Chief of Staff**, "send an email to partner@example.com …" → Go/No-Go card → Go → executed and audited. Switch to **Unauthorized**, same ask → policy denies with reasons. Ask "who can send email" (live policy) vs "who created C-…" (audit history). Finish with "morning brief."
 
